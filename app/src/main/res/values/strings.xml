@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ValueSelect</string>
+    <string name="valueSelector_label">VALUE</string>
+</resources>
