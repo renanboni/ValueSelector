@@ -2,13 +2,10 @@ package com.boni.valueselect
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.media.Image
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
-import kotlinx.android.synthetic.main.value_select.view.*
 
 @SuppressLint("ClickableViewAccessibility")
 class ValueSelect @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0):
