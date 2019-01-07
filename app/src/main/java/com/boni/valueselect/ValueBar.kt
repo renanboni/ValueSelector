@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
@@ -88,6 +89,10 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(measureWidth(widthMeasureSpec), measureHeight(heightMeasureSpec))
+    }
+
     /*
         Calling invalidate() tells Android that the state of the view has changed and needs to be redrawn.
         requestLayout means that the size of the view may have changed and needs to be remeasured, which could impact the entire layout.
@@ -106,5 +111,32 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
 
         invalidate()
+    }
+
+    private fun measureHeight(measureSpec: Int): Int {
+        var size = (paddingTop + paddingBottom).toFloat()
+        size += labelPaint.fontSpacing
+        val maxValueTextSpacing = maxValuePaint.fontSpacing
+        size += Math.max(maxValueTextSpacing.toInt(), Math.max(barHeight, circleRadius * 2))
+        return resolveSizeAndState(size.toInt(), measureSpec, 0)
+    }
+
+    private fun measureWidth(measureSpec: Int): Int {
+        var size = paddingLeft + paddingRight
+        var bounds = Rect()
+
+        labelText?.let {
+            labelPaint.getTextBounds(it, 0, it.length, bounds)
+        }
+
+        size += bounds.width()
+
+        bounds = Rect()
+
+        maxValuePaint.getTextBounds(maxValue.toString(), 0, maxValue.toString().length, bounds)
+
+        size += bounds.width()
+
+        return resolveSizeAndState(size, measureSpec, 0)
     }
 }
