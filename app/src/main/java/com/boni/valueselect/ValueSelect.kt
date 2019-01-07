@@ -1,28 +1,68 @@
 package com.boni.valueselect
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.media.Image
+import android.os.Handler
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import kotlinx.android.synthetic.main.value_select.view.*
 
-class ValueSelect: RelativeLayout {
+@SuppressLint("ClickableViewAccessibility")
+class ValueSelect @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0):
+        RelativeLayout(context, attrs, defStyleAttr) {
 
     private var maxValue = Integer.MAX_VALUE
     private var minValue = Integer.MIN_VALUE
 
-    constructor(context: Context): this(context, null)
-    constructor(context: Context, attrs: AttributeSet?): super(context, attrs)
+    private var root = View.inflate(context, R.layout.value_select, this)
 
-    private var root: View = View.inflate(context, R.layout.value_select, this)
+    private var minusButton: ImageView
+    private var plusButton: ImageView
+    private var valueTextView: EditText
 
-    private var minusButton = root.findViewById<ImageView>(R.id.minusButton)
-    private var plusButton = root.findViewById<ImageView>(R.id.plusButton)
-    private var valueTextView = root.findViewById<EditText>(R.id.valueTextView)
+    private var plusButtonIsPressed = false
+    private var minusButtonIsPressed = false
+
+    companion object {
+        const val REPEAT_INTERVAL_MS: Long = 100
+    }
 
     init {
+        minusButton = root.findViewById(R.id.minusButton)
+        plusButton = root.findViewById(R.id.plusButton)
+        valueTextView = root.findViewById(R.id.valueTextView)
+
         minusButton.setOnClickListener { decrementValue() }
         plusButton.setOnClickListener { incrementValue() }
+
+        minusButton.setOnLongClickListener {
+            minusButtonIsPressed = true
+            handler.post(AutoDecrementer())
+            true
+        }
+
+        plusButton.setOnLongClickListener {
+            plusButtonIsPressed = true
+            handler.post(AutoIncrementer())
+            true
+        }
+
+        minusButton.setOnTouchListener { _ , event ->
+            if((event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL)) {
+                minusButtonIsPressed = false
+            }
+            false
+        }
+
+        plusButton.setOnTouchListener { _ , event ->
+            if((event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL)) {
+                plusButtonIsPressed = false
+            }
+            false
+        }
     }
 
     fun getMinValue() = minValue
@@ -55,7 +95,7 @@ class ValueSelect: RelativeLayout {
         val currentValue = valueTextView.text.toString().toInt()
 
         if(currentValue < maxValue) {
-            valueTextView.setText(currentValue + 1)
+            valueTextView.setText((currentValue + 1).toString())
         }
     }
 
@@ -63,7 +103,25 @@ class ValueSelect: RelativeLayout {
         val currentValue = valueTextView.text.toString().toInt()
 
         if(currentValue > minValue) {
-            valueTextView.setText(currentValue - 1)
+            valueTextView.setText((currentValue - 1).toString())
+        }
+    }
+
+    private inner class AutoIncrementer: Runnable {
+        override fun run() {
+            if(plusButtonIsPressed) {
+                incrementValue()
+                handler.postDelayed(AutoIncrementer(), REPEAT_INTERVAL_MS)
+            }
+        }
+    }
+
+    private inner class AutoDecrementer: Runnable {
+        override fun run() {
+            if(minusButtonIsPressed) {
+                decrementValue()
+                handler.postDelayed(AutoDecrementer(), REPEAT_INTERVAL_MS)
+            }
         }
     }
 }

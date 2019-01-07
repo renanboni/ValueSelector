@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        tools:showIn="@layout/value_select">
+
+    <TextView
+            android:id="@+id/valueLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/valueSelector_label_text"
+            android:text="@string/valueSelector_label"
+            android:layout_below="@+id/valueTextView"
+            android:layout_centerHorizontal="true"/>
+
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -12,40 +25,30 @@
             android:layout_centerHorizontal="true"
             android:id="@+id/valueTextView"/>
 
-    <TextView
-            android:id="@+id/valueLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/valueSelector_label_text"
-            android:text="@string/valueSelector_label"
-            android:layout_below="@+id/valueTextView"
-            android:layout_centerHorizontal="true"/>
 
     <ImageView
             android:src="@drawable/valueselect_minus_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/valueSelector_button_hMargin"
-            android:layout_marginBottom="@dimen/valueSelector_button_hMargin"
-            android:layout_marginRight="@dimen/valueSelector_button_insideMargin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="8dp"
             android:id="@+id/minusButton"
             android:clickable="true"
+            android:layout_toRightOf="@id/valueLabel"
+            android:focusable="true"
             android:layout_centerVertical="true"
-            android:layout_alignRight="@+id/valueLabel"
-            android:layout_marginEnd="@dimen/valueSelector_button_insideMargin" android:focusable="true"
-            android:layout_alignEnd="@+id/valueLabel"/>
+            android:layout_toEndOf="@id/valueLabel"
+            android:layout_marginStart="8dp"/>
 
     <ImageView
             android:src="@drawable/valueselect_plus_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/valueSelector_button_hMargin"
-            android:layout_marginBottom="@dimen/valueSelector_button_hMargin"
-            android:layout_marginLeft="@dimen/valueSelector_button_insideMargin"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="8dp"
             android:id="@+id/plusButton"
-            android:clickable="true"
             android:layout_centerVertical="true"
-            android:layout_alignLeft="@+id/valueLabel"
-            android:layout_marginStart="@dimen/valueSelector_button_insideMargin" android:focusable="true"
-            android:layout_alignStart="@+id/valueLabel"/>
+            android:clickable="true"
+            android:layout_toLeftOf="@id/valueLabel"
+            android:focusable="true"
+            android:layout_toStartOf="@id/valueLabel"
+            android:layout_marginEnd="8dp"/>
 </merge>
