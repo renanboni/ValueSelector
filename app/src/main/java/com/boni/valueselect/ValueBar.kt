@@ -3,6 +3,8 @@ package com.boni.valueselect
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.View
 
@@ -26,6 +28,13 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var fillColor: Int = 0
     private var labelText: String? = null
 
+    private var labelPaint: Paint
+    private var maxValuePaint: Paint
+    private var barBasePaint: Paint
+    private var baseFillPaint: Paint
+    private var circlePaint: Paint
+    private var currentValuePaint: Paint
+
     init {
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ValueBar, 0, 0)
 
@@ -45,6 +54,38 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         }
 
         typedArray.recycle()
+
+        labelPaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.textSize = labelTextSize.toFloat()
+            it.color = labelTextColor
+            it.textAlign = Paint.Align.LEFT
+            it.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+
+        maxValuePaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.textSize = maxValueTextSize.toFloat()
+            it.color = currentValueTextColor
+            it.textAlign = Paint.Align.RIGHT
+            it.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        }
+
+        barBasePaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.color = baseColor
+        }
+
+        baseFillPaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.color = fillColor
+        }
+
+        circlePaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.color = fillColor
+        }
+
+        currentValuePaint = Paint(Paint.ANTI_ALIAS_FLAG).also {
+            it.textSize = circleTextSize.toFloat()
+            it.color = circleTextColor
+            it.textAlign = Paint.Align.CENTER
+        }
     }
 
     /*
