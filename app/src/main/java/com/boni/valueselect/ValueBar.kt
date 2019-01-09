@@ -182,7 +182,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         val barCenter = getBarCenter()
 
-        val halfBarHeight = barCenter * 0.5f
+        val halfBarHeight = barHeight * 0.5f
 
         val top = barCenter - halfBarHeight
         val bottom = barCenter + halfBarHeight
@@ -191,7 +191,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         val rectF = RectF(left.toFloat(), top, right.toFloat(), bottom)
 
-        // Draw base base
+        // Draw base
         canvas.drawRoundRect(rectF, halfBarHeight, halfBarHeight, barBasePaint)
 
         val percentFilled = (currentValue.toFloat() / maxValue.toFloat())
