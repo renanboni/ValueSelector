@@ -11,7 +11,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     : View(context, attrs, defStyleAttr) {
 
     private var maxValue = 100
-    private var currentValue = 0
+    private var currentValue = 10
 
     private var barHeight: Int = 0
     private var circleRadius: Int = 0
@@ -94,8 +94,8 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         super.onDraw(canvas)
 
         drawLabel(canvas)
-        drawMaxValue(canvas)
         drawBar(canvas)
+        drawMaxValue(canvas)
     }
 
     /*
@@ -191,7 +191,29 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
 
         val rectF = RectF(left.toFloat(), top, right.toFloat(), bottom)
 
+        // Draw base base
         canvas.drawRoundRect(rectF, halfBarHeight, halfBarHeight, barBasePaint)
+
+        val percentFilled = (currentValue.toFloat() / maxValue.toFloat())
+
+        val fillLength = barLength * percentFilled
+        val fillPosition = left + fillLength
+
+        val fillRect = RectF(left.toFloat(), top, fillPosition, bottom)
+
+        // Draw filled bar
+        canvas.drawRoundRect(fillRect, halfBarHeight, halfBarHeight, baseFillPaint)
+
+        // Draw circle
+        canvas.drawCircle(fillPosition, barCenter, circleRadius.toFloat(), circlePaint)
+
+        val bounds = Rect()
+        val valueString = Math.round(currentValue.toFloat())
+
+        currentValuePaint.getTextBounds(valueString.toString(), 0, valueString.toString().length, bounds)
+
+        val y = barCenter + (bounds.height() * 0.5)
+        canvas.drawText(valueString.toString(), fillPosition, y.toFloat(), currentValuePaint)
     }
 
     private fun getBarCenter(): Float {
