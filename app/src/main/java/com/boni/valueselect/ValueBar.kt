@@ -2,10 +2,7 @@ package com.boni.valueselect
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Typeface
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 
@@ -93,6 +90,14 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         setMeasuredDimension(measureWidth(widthMeasureSpec), measureHeight(heightMeasureSpec))
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+
+        drawLabel(canvas)
+        drawMaxValue(canvas)
+        drawBar(canvas)
+    }
+
     /*
         Calling invalidate() tells Android that the state of the view has changed and needs to be redrawn.
         requestLayout means that the size of the view may have changed and needs to be remeasured, which could impact the entire layout.
@@ -138,5 +143,60 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         size += bounds.width()
 
         return resolveSizeAndState(size, measureSpec, 0)
+    }
+
+    private fun drawLabel(canvas: Canvas) {
+        val x = paddingLeft
+        val bounds = Rect()
+
+        labelText?.let {
+            labelPaint.getTextBounds(it, 0, it.length, bounds)
+        }
+
+        val y = paddingTop + bounds.height()
+
+        labelText?.let {
+            canvas.drawText(it, x.toFloat(), y.toFloat(), labelPaint)
+        }
+    }
+
+    private fun drawMaxValue(canvas: Canvas) {
+        val max = maxValue.toString()
+
+        val maxValueRect = Rect()
+        maxValuePaint.getTextBounds(max, 0, max.length, maxValueRect)
+
+        val xPos = width - paddingRight
+        val yPos = getBarCenter() + maxValueRect.height() * 0.5f
+
+        canvas.drawText(max, xPos.toFloat(), yPos, maxValuePaint)
+    }
+
+    private fun drawBar(canvas: Canvas) {
+        val maxValueString = maxValue.toString()
+
+        val maxValueRect = Rect()
+        maxValuePaint.getTextBounds(maxValueString, 0, maxValueString.length, maxValueRect)
+
+        val barLength = width - paddingLeft - paddingRight - circleRadius - maxValueRect.width() - spaceAfterBar
+
+        val barCenter = getBarCenter()
+
+        val halfBarHeight = barCenter * 0.5f
+
+        val top = barCenter - halfBarHeight
+        val bottom = barCenter + halfBarHeight
+        val left = paddingLeft
+        val right = barLength + paddingRight
+
+        val rectF = RectF(left.toFloat(), top, right.toFloat(), bottom)
+
+        canvas.drawRoundRect(rectF, halfBarHeight, halfBarHeight, barBasePaint)
+    }
+
+    private fun getBarCenter(): Float {
+        var barCenter = (height - paddingTop - paddingBottom) * 0.5f
+        barCenter += paddingTop * .1f * height
+        return barCenter
     }
 }
