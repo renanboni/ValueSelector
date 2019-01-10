@@ -37,7 +37,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ValueBar, 0, 0)
 
         with(typedArray) {
-            barHeight = getDimensionPixelSize(R.styleable.ActionBar_height, 0)
+            barHeight = getDimensionPixelSize(R.styleable.ValueBar_barHeight, 0)
             circleRadius = getDimensionPixelSize(R.styleable.ValueBar_circleRadius, 0)
             spaceAfterBar = getDimensionPixelSize(R.styleable.ValueBar_spaceAfterBar, 0)
             circleTextSize = getDimensionPixelSize(R.styleable.ValueBar_circleTextSize, 0)

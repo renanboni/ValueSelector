@@ -9,11 +9,13 @@
         tools:context=".MainActivity">
 
     <com.boni.valueselect.ValueSelect
+            android:id="@+id/valueSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
     </com.boni.valueselect.ValueSelect>
 
     <com.boni.valueselect.ValueBar
+            android:id="@+id/valuebar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             custom:barHeight="@dimen/value_bar_barHeight"
@@ -28,4 +30,10 @@
             custom:labelTextSize="@dimen/value_bar_labelTextSize"
             custom:maxValueTextColor="@color/navy"
             custom:maxValueTextSize="@dimen/value_bar_maxValueTextSize"/>
+
+    <Button
+            android:id="@+id/update"
+            android:text="Update"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </LinearLayout>
