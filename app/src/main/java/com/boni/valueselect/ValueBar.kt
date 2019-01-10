@@ -1,10 +1,12 @@
 package com.boni.valueselect
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
+import kotlinx.android.synthetic.main.activity_main.view.*
 
 @SuppressLint("PrivateResource")
 class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
@@ -33,6 +35,11 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private var circlePaint: Paint
     private var currentValuePaint: Paint
 
+    private var animation: ValueAnimator? = null
+    private var animated = false
+    private var animationDuration = 4000L
+    private var valueToDraw = 0f
+
     init {
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.ValueBar, 0, 0)
 
@@ -49,6 +56,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             baseColor = getColor(R.styleable.ValueBar_baseColor, Color.BLACK)
             fillColor = getColor(R.styleable.ValueBar_fillColor, Color.BLACK)
             labelText = getString(R.styleable.ValueBar_labelText)
+            animated = getBoolean(R.styleable.ValueBar_animated, false)
         }
 
         typedArray.recycle()
@@ -115,7 +123,32 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             else -> newValue
         }
 
+        animation?.cancel()
+
+        if(animated) {
+            animation = ValueAnimator.ofInt(0, 100)
+            animation?.run {
+                duration = animationDuration
+                addUpdateListener {
+                    valueToDraw = it.animatedValue.toString().toFloat()
+                    valuebar.invalidate()
+                }
+            }
+
+            animation?.start()
+        } else {
+            valueToDraw = currentValue.toFloat()
+        }
+
         invalidate()
+    }
+
+    fun setAnimated(animated: Boolean) {
+        this.animated = animated
+    }
+
+    fun setAnimationDuration(duration: Long) {
+        animationDuration = duration
     }
 
     private fun measureHeight(measureSpec: Int): Int {
@@ -194,7 +227,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         // Draw base
         canvas.drawRoundRect(rectF, halfBarHeight, halfBarHeight, barBasePaint)
 
-        val percentFilled = (currentValue.toFloat() / maxValue.toFloat())
+        val percentFilled = (valueToDraw / maxValue.toFloat())
 
         val fillLength = barLength * percentFilled
         val fillPosition = left + fillLength
@@ -208,7 +241,7 @@ class ValueBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         canvas.drawCircle(fillPosition, barCenter, circleRadius.toFloat(), circlePaint)
 
         val bounds = Rect()
-        val valueString = Math.round(currentValue.toFloat())
+        val valueString = Math.round(valueToDraw)
 
         currentValuePaint.getTextBounds(valueString.toString(), 0, valueString.toString().length, bounds)
 

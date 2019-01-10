@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             custom:barHeight="@dimen/value_bar_barHeight"
             custom:baseColor="@color/navy"
+            custom:animated="true"
             custom:circleRadius="@dimen/value_bar_circleRadius"
             custom:spaceAfterBar="@dimen/value_bar_spaceAfterBar"
             custom:circleTextColor="@color/white"

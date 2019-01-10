@@ -24,5 +24,6 @@
         <attr name="fillColor" format="color" />
         <!-- Text to use for the label -->
         <attr name="labelText" format="string" />
+        <attr name="animated" format="boolean" />
     </declare-styleable>
 </resources>
